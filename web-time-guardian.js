@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         网页浏览时间限制器
 // @namespace    https://github.com/KNWking
-// @version      0.0.3
+// @version      0.0.4
 // @description  控制特定网页的浏览时间
 // @match        *://*/*
 // @grant        none
@@ -35,10 +35,12 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 20px;
             border-radius: 13px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             z-index: 9999;
             text-align: center;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
@@ -54,7 +56,7 @@
                 document.body.removeChild(popup);
             };
             btn.style.cssText = `
-                background: #007AFF;
+                background: rgba(0, 122, 255, 0.8);
                 color: white;
                 border: none;
                 padding: 10px 20px;
@@ -62,10 +64,16 @@
                 border-radius: 6px;
                 font-size: 14px;
                 cursor: pointer;
-                transition: background 0.3s;
+                transition: all 0.3s;
             `;
-            btn.onmouseover = () => { btn.style.background = '#0056b3'; };
-            btn.onmouseout = () => { btn.style.background = '#007AFF'; };
+            btn.onmouseover = () => { 
+                btn.style.background = 'rgba(0, 86, 179, 0.8)';
+                btn.style.transform = 'scale(1.05)';
+            };
+            btn.onmouseout = () => { 
+                btn.style.background = 'rgba(0, 122, 255, 0.8)';
+                btn.style.transform = 'scale(1)';
+            };
             popup.appendChild(btn);
         });
         
@@ -97,25 +105,84 @@
     // 提示用户输入浏览时间
     function promptForTime() {
         createPopup(
-            '请选择您想要浏览这个网页的时间（分钟）：',
+            '请选择您想要浏览这个网页的时间：',
             [
                 { text: '5分钟', action: () => startTimer(5) },
                 { text: '10分钟', action: () => startTimer(10) },
                 { text: '15分钟', action: () => startTimer(15) },
                 { text: '30分钟', action: () => startTimer(30) },
-                { text: '自定义', action: () => {
-                        const customTime = prompt('请输入自定义时间（分钟）：');
-                        if (customTime && !isNaN(customTime)) {
-                            startTimer(parseInt(customTime));
-                        } else {
-                            alert('请输入有效的数字！');
-                            promptForTime();
-                        }
-                    }}
+                { text: '自定义', action: showCustomTimeInput }
             ]
         );
     }
 
+    // 显示自定义时间输入界面
+    function showCustomTimeInput() {
+        const customTimePopup = document.createElement('div');
+        customTimePopup.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 13px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            z-index: 10000;
+            text-align: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+        `;
+
+        customTimePopup.innerHTML = `
+            <h3 style="margin-bottom: 15px;">设置自定义时间</h3>
+            <input type="number" id="customTimeInput" min="1" step="1" value="5" style="
+                width: 100px;
+                padding: 5px;
+                font-size: 16px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                text-align: center;
+            ">
+            <p style="margin: 10px 0;">分钟</p>
+        `;
+
+        const confirmButton = document.createElement('button');
+        confirmButton.textContent = '确认';
+        confirmButton.style.cssText = `
+            background: rgba(0, 122, 255, 0.8);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 5px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        `;
+        confirmButton.onmouseover = () => {
+            confirmButton.style.background = 'rgba(0, 86, 179, 0.8)';
+            confirmButton.style.transform = 'scale(1.05)';
+        };
+        confirmButton.onmouseout = () => {
+            confirmButton.style.background = 'rgba(0, 122, 255, 0.8)';
+            confirmButton.style.transform = 'scale(1)';
+        };
+        confirmButton.onclick = () => {
+            const customTime = document.getElementById('customTimeInput').value;
+            if (customTime && !isNaN(customTime) && customTime > 0) {
+                startTimer(parseInt(customTime));
+                document.body.removeChild(customTimePopup);
+            } else {
+                alert('请输入有效的正整数！');
+            }
+        };
+
+        customTimePopup.appendChild(confirmButton);
+        document.body.appendChild(customTimePopup);
+    }
+    
     // 开始计时
     let timerHandle;
     let startTime;
@@ -157,10 +224,12 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 10px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             z-index: 9998;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
         `;
@@ -179,7 +248,7 @@
         button.textContent = text;
         button.onclick = onClick;
         button.style.cssText = `
-            background: #007AFF;
+            background: rgba(0, 122, 255, 0.8);
             color: white;
             border: none;
             padding: 8px 16px;
@@ -187,10 +256,16 @@
             border-radius: 6px;
             font-size: 12px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
         `;
-        button.onmouseover = () => { button.style.background = '#0056b3'; };
-        button.onmouseout = () => { button.style.background = '#007AFF'; };
+        button.onmouseover = () => { 
+            button.style.background = 'rgba(0, 86, 179, 0.8)';
+            button.style.transform = 'scale(1.05)';
+        };
+        button.onmouseout = () => { 
+            button.style.background = 'rgba(0, 122, 255, 0.8)';
+            button.style.transform = 'scale(1)';
+        };
         return button;
     }
 
