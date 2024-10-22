@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         网页浏览时间限制器
 // @namespace    https://github.com/KNWking
-// @version      0.0.4
+// @version      0.0.5
 // @description  控制特定网页的浏览时间
 // @match        *://*/*
 // @grant        none
 // @license      GPL-3.0
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     // 从 localStorage 获取管理的 URL 列表
@@ -35,7 +35,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             padding: 20px;
@@ -47,7 +47,7 @@
             min-width: 250px;
         `;
         popup.innerHTML = `<p style="font-size: 16px; color: #333; margin-bottom: 20px;">${message}</p>`;
-        
+
         buttons.forEach(button => {
             const btn = document.createElement('button');
             btn.textContent = button.text;
@@ -66,17 +66,17 @@
                 cursor: pointer;
                 transition: all 0.3s;
             `;
-            btn.onmouseover = () => { 
+            btn.onmouseover = () => {
                 btn.style.background = 'rgba(0, 86, 179, 0.8)';
                 btn.style.transform = 'scale(1.05)';
             };
-            btn.onmouseout = () => { 
+            btn.onmouseout = () => {
                 btn.style.background = 'rgba(0, 122, 255, 0.8)';
                 btn.style.transform = 'scale(1)';
             };
             popup.appendChild(btn);
         });
-        
+
         document.body.appendChild(popup);
     }
 
@@ -107,11 +107,11 @@
         createPopup(
             '请选择您想要浏览这个网页的时间：',
             [
-                { text: '5分钟', action: () => startTimer(5) },
-                { text: '10分钟', action: () => startTimer(10) },
-                { text: '15分钟', action: () => startTimer(15) },
-                { text: '30分钟', action: () => startTimer(30) },
-                { text: '自定义', action: showCustomTimeInput }
+                {text: '5分钟', action: () => startTimer(5)},
+                {text: '10分钟', action: () => startTimer(10)},
+                {text: '15分钟', action: () => startTimer(15)},
+                {text: '30分钟', action: () => startTimer(30)},
+                {text: '自定义', action: showCustomTimeInput}
             ]
         );
     }
@@ -124,7 +124,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             padding: 20px;
@@ -186,7 +186,7 @@
         customTimePopup.appendChild(confirmButton);
         document.body.appendChild(customTimePopup);
     }
-    
+
     // 开始计时
     let timerHandle;
     let startTime;
@@ -228,7 +228,7 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             padding: 10px;
@@ -237,13 +237,13 @@
             z-index: 9998;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
         `;
-        
+
         const addButton = createButton('添加到管理', addCurrentPage);
         const removeButton = createButton('从管理中移除', removeCurrentPage);
-        
+
         panel.appendChild(addButton);
         panel.appendChild(removeButton);
-        
+
         document.body.appendChild(panel);
     }
 
@@ -252,7 +252,7 @@
         button.textContent = text;
         button.onclick = onClick;
         button.style.cssText = `
-            background: rgba(0, 122, 255, 0.8);
+            background: rgba(0, 122, 255, 0.6);
             color: white;
             border: none;
             padding: 8px 16px;
@@ -262,12 +262,12 @@
             cursor: pointer;
             transition: all 0.3s;
         `;
-        button.onmouseover = () => { 
-            button.style.background = 'rgba(0, 86, 179, 0.8)';
+        button.onmouseover = () => {
+            button.style.background = 'rgba(0, 86, 179, 0.6)';
             button.style.transform = 'scale(1.05)';
         };
-        button.onmouseout = () => { 
-            button.style.background = 'rgba(0, 122, 255, 0.8)';
+        button.onmouseout = () => {
+            button.style.background = 'rgba(0, 122, 255, 0.6)';
             button.style.transform = 'scale(1)';
         };
         return button;
