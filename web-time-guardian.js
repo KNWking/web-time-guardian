@@ -137,6 +137,10 @@
 
         customTimePopup.innerHTML = `
             <h3 style="margin-bottom: 15px;">设置自定义时间</h3>
+            <p style="margin-bottom: 10px; color: #666; font-size: 14px;">
+                请输入您想要浏览的时间<br>
+                <strong style="color: #333;">（单位：分钟）</strong>
+            </p>
             <input type="number" id="customTimeInput" min="1" step="1" value="5" style="
                 width: 100px;
                 padding: 5px;
@@ -145,7 +149,7 @@
                 border-radius: 5px;
                 text-align: center;
             ">
-            <p style="margin: 10px 0;">分钟</p>
+            <p style="margin: 10px 0; color: #666; font-size: 14px;">分钟</p>
         `;
 
         const confirmButton = document.createElement('button');
