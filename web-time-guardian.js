@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         网页浏览时间限制器
 // @namespace    https://github.com/KNWking
-// @version      0.0.1
+// @version      0.0.3
 // @description  控制特定网页的浏览时间
 // @match        *://*/*
 // @grant        none
@@ -35,14 +35,17 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             padding: 20px;
-            border: 2px solid #333;
+            border-radius: 13px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
             z-index: 9999;
             text-align: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            min-width: 250px;
         `;
-        popup.innerHTML = `<p>${message}</p>`;
-
+        popup.innerHTML = `<p style="font-size: 16px; color: #333; margin-bottom: 20px;">${message}</p>`;
+        
         buttons.forEach(button => {
             const btn = document.createElement('button');
             btn.textContent = button.text;
@@ -50,10 +53,22 @@
                 button.action();
                 document.body.removeChild(popup);
             };
-            btn.style.margin = '5px';
+            btn.style.cssText = `
+                background: #007AFF;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                margin: 5px;
+                border-radius: 6px;
+                font-size: 14px;
+                cursor: pointer;
+                transition: background 0.3s;
+            `;
+            btn.onmouseover = () => { btn.style.background = '#0056b3'; };
+            btn.onmouseout = () => { btn.style.background = '#007AFF'; };
             popup.appendChild(btn);
         });
-
+        
         document.body.appendChild(popup);
     }
 
@@ -142,24 +157,41 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             padding: 10px;
-            border: 1px solid #333;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             z-index: 9998;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
         `;
-
-        const addButton = document.createElement('button');
-        addButton.textContent = '添加到管理';
-        addButton.onclick = addCurrentPage;
-
-        const removeButton = document.createElement('button');
-        removeButton.textContent = '从管理中移除';
-        removeButton.onclick = removeCurrentPage;
-
+        
+        const addButton = createButton('添加到管理', addCurrentPage);
+        const removeButton = createButton('从管理中移除', removeCurrentPage);
+        
         panel.appendChild(addButton);
         panel.appendChild(removeButton);
-
+        
         document.body.appendChild(panel);
+    }
+
+    function createButton(text, onClick) {
+        const button = document.createElement('button');
+        button.textContent = text;
+        button.onclick = onClick;
+        button.style.cssText = `
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 5px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        `;
+        button.onmouseover = () => { button.style.background = '#0056b3'; };
+        button.onmouseout = () => { button.style.background = '#007AFF'; };
+        return button;
     }
 
     // 初始化
